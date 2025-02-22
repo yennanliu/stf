@@ -24,10 +24,10 @@ RUN apk update && \
     BASE_URL="https://unofficial-builds.nodejs.org/download/release/$NODE_VERSION" && \
     if [ "$TARGETARCH" = "amd64" ]; then \
         FILE_NAME="node-$NODE_VERSION-linux-x64-musl.tar.xz"; \
-    elif [ "$ARCH" = "arm64" ]; then \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
         FILE_NAME="node-$NODE_VERSION-linux-arm64-musl.tar.xz"; \
     else \
-        echo "Unsupported architecture: $ARCH"; \
+        echo "Unsupported architecture: $TARGETARCH"; \
         exit 1; \
     fi && \
     curl -fsSL "$BASE_URL/$FILE_NAME" | tar -xJ -C /usr/local --strip-components=1 && \
