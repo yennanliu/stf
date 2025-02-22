@@ -2,7 +2,7 @@
 # Copyright © 2022-2024 contains code contributed by Orange SA, authors: Denis Barbaron - Licensed under the Apache license 2.0
 #
 
-FROM alpine:3.21.2
+FROM alpine:3.21.3
 
 # Sneak the stf executable into $PATH.
 ENV PATH=/app/bin:$PATH
@@ -19,7 +19,18 @@ ARG TARGETARCH
 
 RUN apk update && \
     apk upgrade && \ 
-    apk add zeromq-dev musl-dev protobuf-dev git graphicsmagick yasm ninja g++ git wget python3 cmake make curl unzip zip nodejs npm coreutils shadow && \
+    apk add zeromq-dev musl-dev protobuf-dev git graphicsmagick yasm ninja g++ git wget python3 cmake make curl unzip zip coreutils shadow && \
+    NODE_VERSION="v22.11.0" && \
+    BASE_URL="https://unofficial-builds.nodejs.org/download/release/$NODE_VERSION" && \
+    if [ "$TARGETARCH" = "amd64" ]; then \
+        FILE_NAME="node-$NODE_VERSION-linux-x64-musl.tar.xz"; \
+    elif [ "$ARCH" = "arm64" ]; then \
+        FILE_NAME="node-$NODE_VERSION-linux-arm64-musl.tar.xz"; \
+    else \
+        echo "Unsupported architecture: $ARCH"; \
+        exit 1; \
+    fi && \
+    curl -fsSL "$BASE_URL/$FILE_NAME" | tar -xJ -C /usr/local --strip-components=1 && \
     adduser -D -h /home/stf -s /sbin/nologin stf && \
     mkdir -p /home/stf && \
     chown stf:stf /home/stf && \
@@ -52,6 +63,7 @@ RUN apk update && \
       .eslintrc .nvmrc .tool-versions res/.eslintrc && \
     cd && \
     rm -rf .npm .cache .config .local && \
+    apk add libc6-compat && \
     cd /app
 
 # Switch to the app user.
