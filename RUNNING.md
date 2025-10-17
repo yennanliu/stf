@@ -2,6 +2,16 @@
 
 This guide describes how to run STF (Smartphone Test Farm) using different methods: Docker Compose, Docker, or native installation.
 
+- The local URL to access STF is:
+  - http://localhost:7100
+
+- You can also access it from other devices on your network using your machine's IP address:
+  - http://10.0.0.90:7100
+
+(check `docker-compose.yml`)
+- Email: test@google.com
+- Name: admin
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
