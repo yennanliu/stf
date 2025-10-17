@@ -2,6 +2,24 @@
 
 This guide describes how to run STF (Smartphone Test Farm) using different methods: Docker Compose, Docker, or native installation.
 
+
+## Run
+
+```bash
+docker run -d \
+  --name stf \
+  --network stf-network \
+  -e "RETHINKDB_PORT_28015_TCP=tcp://rethinkdb:28015" \
+  -e "STF_ADMIN_EMAIL=test@google.com" \
+  -e "STF_ADMIN_NAME=admin" \
+  -p 7100:7100 \
+  -p 7110:7110 \
+  -p 7400-7500:7400-7500 \
+  devicefarmer/stf:latest \
+  stf local --adb-host adbd --public-ip 10.0.0.90 \
+  --provider-min-port 7400 --provider-max-port 7500
+```
+
 - The local URL to access STF is:
   - http://localhost:7100
 
@@ -11,6 +29,9 @@ This guide describes how to run STF (Smartphone Test Farm) using different metho
 (check `docker-compose.yml`)
 - Email: test@google.com
 - Name: admin
+
+
+---------------------
 
 ## Table of Contents
 
